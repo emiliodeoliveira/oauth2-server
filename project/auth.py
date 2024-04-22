@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required
 from project.models.User import User
+from datetime import datetime
 from . import db
+import uuid
 
 auth = Blueprint('auth', __name__)
 
@@ -41,11 +43,16 @@ def signup_post():
 
     user_data = User.query.filter_by(email=email).first
 
-    if user_data:
+    if user_data == email:
         flash('This email address already exists')
         return redirect(url_for('auth.signup'))
 
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    new_user = User(id=str(uuid.uuid4()),
+                    email=email,
+                    name=name,
+                    password=generate_password_hash(password, method='pbkdf2:sha256'),
+                    date_created=datetime.utcnow()
+                    )
 
     db.session.add(new_user)
     db.session.commit()

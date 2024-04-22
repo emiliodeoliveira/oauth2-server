@@ -9,9 +9,21 @@ def create_app():
     app = Flask(__name__)
 
     app.config['SECRET_KEY'] = 'R0JHkAVv2gZbIwpsErsRqEzJh'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+    app.config["SQLALCHEMY_ECHO"] = True
+    app.config["SQLALCHEMY_RECORD_QUERIES"] = True
 
     db.init_app(app)
+
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception as exception:
+            print("WARNING ******************************")
+            print("got the following exception when attempting db.create_all() in __init__.py: " + str(exception))
+        finally:
+            print("db.create_all() in __init__.py was successfull - no exceptions were raised")
+        from .models import User
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'

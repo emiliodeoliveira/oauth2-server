@@ -1,7 +1,7 @@
-from project import db
 from datetime import datetime
 from dataclasses import dataclass
 from flask_login import UserMixin
+from . import db
 
 
 @dataclass(order=True)

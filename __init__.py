@@ -32,7 +32,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
 
-        from project.models.User import User
+        from .models import User
         return User.query.get(user_id)
 
     from .auth import auth as auth_blueprint

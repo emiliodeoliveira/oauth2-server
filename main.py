@@ -1,19 +1,21 @@
 import time
 
-from flask import Blueprint, render_template, redirect, request, session
+from authlib.oauth2 import OAuth2Error
+from flask import Blueprint, render_template, redirect, request, session, url_for
 from flask_login import login_required, current_user
 from werkzeug.security import gen_salt
 
 from . import db
-from .models import OAuth2Client
+from .models import OAuth2Client, User
+from .oauth2 import authorization, require_oauth
 
 main = Blueprint('main', __name__)
 
 
 def get_session_user():
-    if 'id' not in session:
+    if 'user_id' not in session:
         return None
-    user_id = session['user_id']
+    user_id = session.get('user_id')
     return user_id
 
 
@@ -34,8 +36,8 @@ def profile():
 
 @main.route('/new_client', methods=('GET', 'POST'))
 def new_client():
-    user = current_user()
-    if not user:
+    user_id = get_session_user()
+    if not user_id:
         return redirect('/')
     if request.method == 'GET':
         return render_template('new_client.html')
@@ -45,7 +47,7 @@ def new_client():
     client = OAuth2Client(
         client_id=client_id,
         client_id_issued_at=client_id_issued_at,
-        user_id=user.id,
+        user_id=user_id,
     )
 
     form = request.form
@@ -68,3 +70,24 @@ def new_client():
     db.session.add(client)
     db.session.commit()
     return redirect('/')
+
+
+@main.route('/oauth/authorize', methods=['GET', 'POST'])
+def authorize():
+    user = current_user()
+    if not user:
+        return redirect(url_for('home.home', next=request.url))
+    if request.method == 'GET':
+        try:
+            grant = authorization.get_consent_grant(end_user=user)
+        except OAuth2Error as error:
+            return error.error
+        return render_template('authorize.html', user=user, grant=grant)
+    if not user and 'username' in request.form:
+        username = request.form.get('username')
+        user = User.query.filter_by(username=username).first()
+    if request.form['confirm']:
+        grant_user = user
+    else:
+        grant_user = None
+    return authorization.create_authorization_response(grant_user=grant_user)

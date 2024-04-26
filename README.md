@@ -24,7 +24,7 @@ Install dependencies:
 Set the environment variables:
 
 ```bash
- $ export FLASK_APP=project.run.py 
+ $ export FLASK_APP=app.py 
 ```
 If you want to enable the debug mode, please set this:
 

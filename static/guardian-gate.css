@@ -1,0 +1,8 @@
+.box-title {
+    text-align: center;
+}
+
+.bg-img {
+  background-image: url('static/img/background-index.jpeg');
+  background-repeat: no-repeat;
+}

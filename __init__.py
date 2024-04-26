@@ -2,13 +2,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-
 db = SQLAlchemy()
 
 
 def create_app():
     app = Flask(__name__, static_folder='static')
 
+    # These variables will be removed in the v1.1
     app.config['SECRET_KEY'] = 'R0JHkAVv2gZbIREwpsErsRqEzJh'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config["SQLALCHEMY_ECHO"] = True
@@ -20,10 +20,11 @@ def create_app():
         try:
             db.create_all()
         except Exception as exception:
-            print("WARNING *********** WARNING ***********")
-            print("got the following exception when attempting db.create_all() in __init__.py: " + str(exception))
+            print("*********** WARNING ***********")
+            print("ERROR: The following exception occurred: ")
+            print("Failure on attempting to run db.create_all() in __init__.py: " + str(exception))
         finally:
-            print("db.create_all() in __init__.py was successfully - no exceptions were raised")
+            print("SUCCESS! db.create_all() in __init__.py was successfully executed!")
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -32,7 +33,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
 
-        from project.models.User import User
+        from .models import User
         return User.query.get(user_id)
 
     from .auth import auth as auth_blueprint

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if client %}
+<div class="container">
+    <div class="columns is-centered">
+        <div class="column is-half">
+            <div class="box">
+                <h3 class="title has-text-black">{{ client.client_name }} details</h3>
+                <div class="field">
+                    <label class="label">ID</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Enter name" value="{{ client.id }}" disabled>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Creation Date</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Creation date"
+                               value="{{ client.client_id_issued_at }}" disabled>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">URIs to redirect</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Enter name" value="{{ client.redirect_uris }}"
+                               disabled>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Scope</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Enter name" value="{{ client.scope }}" disabled>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Grant types</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Enter name" value="{{ client.grant_types }}"
+                               disabled>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Token authentication method</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Enter name"
+                               value="{{ client.token_endpoint_auth_method }}"
+                               disabled>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-primary" id="showModal">View Secrets</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="app">
+    <div id="image-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Secret Key</p>
+                </header>
+                <section class="modal-card-body">
+                    <h6>Your current secret key:</h6>
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="content">
+                                <h4>{{ client.client_secret }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="closeBtn" class="button is-primary">Close</button>
+                </footer>
+            </div>
+        </div>
+        <button id="image-modal-close" class="modal-close"></button>
+    </div>
+    <br>
+</div>
+
+{% else %}
+Erro
+{% endif %}
+{% endblock %}

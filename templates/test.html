@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OAuth2 System</title>
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+  <!-- Font Awesome for icons (optional) -->
+  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <style>
+    /* Custom Styles */
+    .navbar-item:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="#">
+        <strong>OAuth2 System</strong>
+      </a>
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="navbarMenu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="#">Home</a>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            <a class="button is-light" href="#">Login</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                Profile
+              </a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item" href="#">Settings</a>
+                <a class="navbar-item" href="#">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</body>
+</html>

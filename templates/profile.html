@@ -1,29 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3 class="title is-3 has-text-black" >Welcome, {{ name }}!</h3>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th><abbr title="Number"></abbr></th>
-      <th><abbr title="Application">Application</abbr></th>
-      <th><abbr title="Created">Created</abbr></th>
-      <th><abbr title="Edit">Action</abbr></th>
 
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
-      <td>
-        <a href="" title="API">API</a>
-      </td>
-      <td>04/24/2024 13:32</td>
-      <td>View | Edit</td>
-    </tr>
-  </tbody>
-</table>
-<a href="{{ url_for('main.new_client') }}" class="btn btn-primary">Register Client</a>
+  <!-- Font Awesome for icons (optional) -->
+  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <style>
+    /* Custom Styles */
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+<body>
+  <div class="container">
+    <h3 class="title is-3 has-text-black" >Welcome, {{ name }}!</h3>
+    <h3 class="subtitle has-text-black">These are your current registered applications:</h3>
+    <table class="table is-bordered is-fullwidth">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Creation Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      {% for client in clients %}
+      <tbody>
+        <tr>
+          <td>{{ client.client_name }}</td>
+          <td>{{ client.client_id_issued_at }}</td>
+          <td>
+            <div class="buttons">
+              <button class="button is-primary is-small"><a href="{{ url_for('main.client_info', client_id=client.client_id) }}">View</a></button>
+<!--              <button class="button is-danger is-small">Delete</button>-->
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      {% endfor %}
+    </table>
+    <button class="button is-primary"><a href="{{ url_for('main.new_client') }}">Create Application</a></button>
+  </div>
+</body>
+</html>
 
 {% endblock %}

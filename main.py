@@ -1,7 +1,8 @@
 import time
 
+from authlib.integrations.flask_oauth2 import current_token
 from authlib.oauth2 import OAuth2Error
-from flask import Blueprint, render_template, redirect, request, session, url_for
+from flask import Blueprint, render_template, redirect, request, session, url_for, jsonify
 from flask_login import login_required, current_user
 from werkzeug.security import gen_salt
 
@@ -31,7 +32,8 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    clients = OAuth2Client.query.filter_by(user_id=get_session_user())
+    return render_template('profile.html', name=current_user.name, clients=clients)
 
 
 @main.route('/new_client', methods=('GET', 'POST'))
@@ -69,14 +71,22 @@ def new_client():
 
     db.session.add(client)
     db.session.commit()
-    return redirect('/')
+    return redirect('/profile')
+
+
+@main.route('/client_info', methods=['GET'])
+@login_required
+def client_info():
+    client_id = request.args.get('client_id')
+    client = OAuth2Client.query.filter_by(client_id=client_id).first()
+    return render_template('client_info.html', client=client)
 
 
 @main.route('/oauth/authorize', methods=['GET', 'POST'])
 def authorize():
-    user = current_user()
+    user = get_session_user()
     if not user:
-        return redirect(url_for('home.home', next=request.url))
+        return redirect(url_for('login.html', next=request.url))
     if request.method == 'GET':
         try:
             grant = authorization.get_consent_grant(end_user=user)
@@ -91,3 +101,13 @@ def authorize():
     else:
         grant_user = None
     return authorization.create_authorization_response(grant_user=grant_user)
+
+
+@main.route('/oauth/token', methods=['POST'])
+def issue_token():
+    return authorization.create_token_response()
+
+
+@main.route('/oauth/revoke', methods=['POST'])
+def revoke_token():
+    return authorization.create_endpoint_response('revocation')
